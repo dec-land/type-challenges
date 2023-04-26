@@ -20,7 +20,16 @@
 
 /* _____________ Your Code Here _____________ */
 
-type TupleToObject<T extends readonly any[]> = any
+/*
+  Explanation
+
+  Create a mapped type from each value within the tuplem, set the key/value to be the same.
+  Use the ReadonlyArray<string | number> type so that the {} isn't allowed in the error check
+
+*/
+type TupleToObject<T extends ReadonlyArray<string | number>> = {
+  [k in T[number]]: k
+}
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

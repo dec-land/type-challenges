@@ -23,12 +23,21 @@
   > View on GitHub: https://tsch.js.org/2
 */
 
+import type { Equal, Expect } from '@type-challenges/utils'
+
 /* _____________ Your Code Here _____________ */
 
-type MyReturnType<T> = any
+/*
+  Explanation
+
+  Check whether the generic provided extents a function that takes any number of arguments.
+  Infer the return type. If it is a function, use that. Else just set it to unknown
+
+*/
+
+type MyReturnType<T> = T extends (...args: never[]) => infer R ? R : unknown
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
 
 type cases = [
   Expect<Equal<string, MyReturnType<() => string>>>,

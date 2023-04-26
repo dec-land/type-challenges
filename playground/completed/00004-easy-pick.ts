@@ -31,6 +31,14 @@
 
 /* _____________ Your Code Here _____________ */
 
+/*
+  Explanation
+
+  Create a mapped type that loops through the keys provided
+  Extract the type from the object provided by indexing into it using the key
+
+*/
+
 type MyPick<T, K extends keyof T> = { [Key in K]: T[Key] }
 
 /* _____________ Test Cases _____________ */

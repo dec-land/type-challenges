@@ -30,6 +30,15 @@
 
 /* _____________ Your Code Here _____________ */
 
+/*
+  Explanation
+
+  Create a mapped type that loops through each key of the object type provided.
+  If the key extends (equals) the keys provided within the generic
+  Add that key to the type, else use never which does nothing.
+
+*/
+
 type MyOmit<T, K extends keyof T> = { [Key in keyof T as Key extends K ? never : Key ]: T[Key] }
 
 /* _____________ Test Cases _____________ */

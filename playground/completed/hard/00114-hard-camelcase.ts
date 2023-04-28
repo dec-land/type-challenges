@@ -19,7 +19,35 @@
 
 /* _____________ Your Code Here _____________ */
 
-type CamelCase<S extends string> = any
+// symbols will be the same when capitalized
+type IsAlphabet<T extends string> = Lowercase<T> extends Uppercase<T>
+  ? false
+  : true
+
+// type CamelCase<
+//     S extends string,
+//     Result extends string = '',
+// > = S extends `${infer Left}${infer Rest}`
+//   ? IsAlphabet<Left> extends true
+//     ? Result extends `${infer Prefix}_`
+//       ? CamelCase<Rest, `${Prefix}${Uppercase<Left>}`>
+//       : CamelCase<Rest, `${Result}${Lowercase<Left>}`>
+//     : CamelCase<Rest, `${Result}${Left}`>
+//   : Result
+
+// Basic one that works for most cases
+// type CamelCase<S extends string> = S extends `${infer Start}_${infer End}`
+//   ? `${Start}${CamelCase<Capitalize<End>>}`
+//   : S
+
+// your answers
+type CamelCase<S extends string> = S extends `${infer X}_${infer Y}${infer Z}`
+  // If Y is a symbol (not alphabetic) then keep keep that in and don't change it
+  ? IsAlphabet<Y> extends false
+    ? `${Lowercase<X>}_${CamelCase<`${Y}${Z}`>}`
+    // Else capitalize and append it
+    : `${Lowercase<X>}${Uppercase<Y>}${CamelCase<Z>}`
+  : Lowercase<S>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

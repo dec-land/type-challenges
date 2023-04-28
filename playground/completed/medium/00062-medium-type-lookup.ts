@@ -29,7 +29,11 @@
 
 /* _____________ Your Code Here _____________ */
 
-type LookUp<U, T> = any
+type Types = 'cat' | 'dog'
+
+type LookUp<U, T extends Types> = U extends { type: T } ? U : never
+
+// type LookUp<U extends { type: string }, T extends U['type']> = Extract<U, { type: T }>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

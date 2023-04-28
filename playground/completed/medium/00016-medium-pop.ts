@@ -26,7 +26,7 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Pop<T extends unknown[]> = T extends []
+export type Pop<T extends unknown[]> = T extends []
   ? []
   : T extends [...infer First, infer _]
     ? First

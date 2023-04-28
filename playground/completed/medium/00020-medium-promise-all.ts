@@ -23,10 +23,23 @@
 
 /* _____________ Your Code Here _____________ */
 
-declare function PromiseAll(values: any): any
+// declare function PromiseAll<T extends unknown[]>(values: readonly [...T]):
+// Promise<{ [K in keyof T]: T[K] extends PromiseLike<infer U>
+//   ? U extends PromiseLike<any>
+//     ? Awaited<U>
+//     : U
+//   : Awaited<T[K]> }>
+
+type Awaited<T> = T extends Promise<infer R> ? Awaited<R> : T
+
+// Loop through each value in the array, create a new mapped object with the awaited value.
+declare function PromiseAll<T extends unknown[]>(values: readonly [...T]): Promise<{
+  [P in keyof T]: Awaited<T[P]>
+}>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { Pop } from './00016-medium-pop'
 
 const promiseAllTest1 = PromiseAll([1, 2, 3] as const)
 const promiseAllTest2 = PromiseAll([1, 2, Promise.resolve(3)] as const)

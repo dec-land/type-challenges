@@ -26,7 +26,7 @@ type Thenable<T> = {
   then: (onfulfilled: (arg: T) => unknown) => unknown
 }
 
-type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer U>
+export type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer U>
   ? U extends PromiseLike<any>
     ? MyAwaited<U>
     : U

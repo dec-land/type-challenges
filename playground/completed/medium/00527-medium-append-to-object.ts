@@ -19,7 +19,16 @@
 
 /* _____________ Your Code Here _____________ */
 
-type AppendToObject<T, U, V> = any
+// type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never
+
+// type AppendToObject<T extends Record<string, unknown>, U extends string, V> =
+//   Expand<T & { [K in U]: V }>
+
+type AppendToObject<T extends Record<string, unknown>, U extends string, V> = {
+  [K in keyof T | U]: K extends keyof T ? T[K] : V;
+}
+
+type Test = AppendToObject<test1, 'home', boolean>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

@@ -12,10 +12,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Filter<T extends any[], P> = []
+type Filter<T extends unknown[], P extends Primitive> = T extends [infer F, ...infer R]
+  ? F extends P
+    ? [F, ...Filter<R, P>]
+    : Filter<R, P>
+  : []
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { Primitive } from 'utility-types'
 
 type Falsy = false | 0 | '' | null | undefined
 

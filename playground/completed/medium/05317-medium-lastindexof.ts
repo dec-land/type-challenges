@@ -19,7 +19,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-type LastIndexOf<T, U> = any
+type LastIndexOf<T extends unknown[], U extends number> = T extends [...infer Rest, infer F]
+  // if found, provide the length, else recursively loop through the values
+  ? Equal<F, U> extends true
+    ? Rest['length']
+    : LastIndexOf<Rest, U>
+  : -1
+
+type Test = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

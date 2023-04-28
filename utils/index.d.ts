@@ -27,3 +27,12 @@ export type ExpectValidArgs<FUNC extends (...args: any[]) => any, ARGS extends a
   : false
 
 export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never
+
+/**
+ * Expand a type recusively. Makes types much nicer on hover ooooft
+ */
+export type ExpandRecursively<T> = T extends object
+  ? T extends infer O
+    ? { [K in keyof O]: ExpandRecursively<O[K]> }
+    : never
+  : T

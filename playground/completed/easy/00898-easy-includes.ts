@@ -18,10 +18,16 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Includes<T extends readonly any[], U> = any
+// Couldn't figure out this one fully on my own, got part way but didn't realise using the equal utility
+// type was an option.
+// Recursively checks
+type Includes<T extends readonly unknown[], U> =
+  T extends [infer First, ...infer Rest]
+    ? Equal<First, U> extends true ? true : Includes<Rest, U>
+    : false
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, ExpandRecursively, Expect } from '@type-challenges/utils'
 
 type cases = [
   Expect<Equal<Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Kars'>, true>>,

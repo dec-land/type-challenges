@@ -12,10 +12,11 @@
 
 /* _____________ Your Code Here _____________ */
 
-type OptionalKeys<T> = any
+type OptionalKeys<T> = keyof GetOptional<T>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { GetOptional } from './00059-hard-get-optional'
 
 type cases = [
   Expect<Equal<OptionalKeys<{ a: number; b?: string }>, 'b'>>,

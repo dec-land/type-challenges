@@ -27,7 +27,7 @@
 
 /* _____________ Your Code Here _____________ */
 
-type RequiredByKeys<T, K> = any
+type RequiredByKeys<T, K extends keyof T = keyof T> = Omit<T & Required<Pick<T, K>>, never>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

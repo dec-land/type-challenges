@@ -24,7 +24,11 @@ type Fill<
   N,
   Start extends number = 0,
   End extends number = T['length'],
-> = any
+> = T extends [...infer Rest, infer Last]
+  ? Fill<Rest, N>
+  : [N]
+
+type Test = Fill<[1, 2, 3], 0>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

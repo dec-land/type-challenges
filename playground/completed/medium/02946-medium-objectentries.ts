@@ -23,7 +23,18 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ObjectEntries<T> = any
+// type ObjectEntries<T, U = Required<T>> = {
+//   [K in keyof U]: [K, U[K]]
+// }[keyof U]
+
+// type ObjectEntries<T, K extends keyof T = keyof T> = K extends K
+//   ? [K, T[K] extends undefined | infer Type ? Type : undefined]
+//   : never
+
+// Optional and undefined types would display as never unless the inferred value was used
+type ObjectEntries<T> = {
+  [K in keyof T]-?: [K, T[K] extends (infer R | undefined) ? R : T[K]]
+}[keyof T]
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

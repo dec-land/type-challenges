@@ -20,10 +20,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Unique<T> = any
+type Unique<T extends unknown[]> = T extends [...infer Rest, infer Last]
+  ? Includes<Rest, Last> extends true
+    ? [...Unique<Rest>]
+    : [...Unique<Rest>, Last]
+  : T
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { Includes } from '../easy/00898-easy-includes'
 
 type cases = [
   Expect<Equal<Unique<[1, 1, 2, 2, 3, 3]>, [1, 2, 3]>>,

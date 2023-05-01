@@ -18,7 +18,18 @@
 
 /* _____________ Your Code Here _____________ */
 
-type CapitalizeWords<S extends string> = any
+type IsAlphabet<T extends string> = Lowercase<T> extends Uppercase<T>
+  ? false
+  : true
+
+// type CapitalizeWords<S extends string> = S extends `${infer Start} ${infer Rest}`
+//   ? `${Capitalize<Start>} ${CapitalizeWords<Rest>}`
+//   : Capitalize<S>
+
+type CapitalizeRest<S extends string> = S extends `${infer F}${infer R}`
+  ? `${F}${CapitalizeRest<IsAlphabet<F> extends false ? Capitalize<R> : R>}`
+  : S
+type CapitalizeWords<S extends string> = Capitalize<CapitalizeRest<S>>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

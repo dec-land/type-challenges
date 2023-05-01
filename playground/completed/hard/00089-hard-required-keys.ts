@@ -19,10 +19,11 @@
 
 /* _____________ Your Code Here _____________ */
 
-type RequiredKeys<T> = any
+type RequiredKeys<T> = keyof GetRequired<T>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { GetRequired } from './00057-hard-get-required'
 
 type cases = [
   Expect<Equal<RequiredKeys<{ a: number; b?: string }>, 'a'>>,

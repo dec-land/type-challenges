@@ -33,7 +33,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Get<T, K> = string
+type Get<T, K> = K extends keyof T
+  // string key exists (works for foo.baz in tests)
+  ? T[K]
+  // Else, extract the key path
+  : K extends `${infer A}.${infer B}`
+    // Recurse through
+    ? A extends keyof T ? Get<T[A], B> : never
+    : K extends keyof T ? T[K] : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

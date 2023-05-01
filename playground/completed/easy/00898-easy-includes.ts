@@ -21,7 +21,7 @@
 // Couldn't figure out this one fully on my own, got part way but didn't realise using the equal utility
 // type was an option.
 // Recursively checks
-type Includes<T extends readonly unknown[], U> =
+export type Includes<T extends readonly unknown[], U> =
   T extends [infer First, ...infer Rest]
     ? Equal<First, U> extends true ? true : Includes<Rest, U>
     : false

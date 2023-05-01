@@ -39,9 +39,17 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Chainable = {
-  option(key: string, value: any): any
-  get(): any
+type Chainable<T extends Record<string, unknown> = {}> = {
+  //
+  option: <K extends string, V>(
+    // If the key already exists within object T, set the key to a custom error message
+    key: K extends keyof T
+      ? `key \`${K}\` already exists`
+      : K,
+    value: V
+    // Return a new Chainable with the current type provided. Omit the key so it can be overriden
+  ) => Chainable<Omit<T, K> & Record<K, V>>
+  get: () => T
 }
 
 /* _____________ Test Cases _____________ */

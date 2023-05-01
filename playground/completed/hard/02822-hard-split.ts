@@ -18,7 +18,18 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Split<S extends string, SEP extends string> = any
+// If just the `string` type is provided, return string[]
+type Split<S extends string, SEP extends string> = string extends S
+  ? string[]
+  // If string and seperator are the same, return empty array
+  : Equal<S, SEP> extends true
+    ? []
+    // Else recursively split the string out
+    : S extends `${infer First}${SEP}${infer Rest}`
+      ? [First, ...Split<Rest, SEP>]
+      : [S]
+
+type Test = Split<string, 'whatever'>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

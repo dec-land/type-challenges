@@ -18,7 +18,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type UnionToIntersection<U> = any
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
+type UnionToIntersection<U> = (
+  U extends never ? never : (k: U) => void
+) extends (k: infer I) => void
+  ? I
+  : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

@@ -23,6 +23,8 @@
 
 type ObjectKeyPaths<T extends object> = any
 
+type Test = ObjectKeyPaths<typeof ref>
+
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect, ExpectExtends } from '@type-challenges/utils'
 

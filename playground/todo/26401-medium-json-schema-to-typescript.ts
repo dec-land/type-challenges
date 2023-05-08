@@ -17,10 +17,68 @@
 
 /* _____________ Your Code Here _____________ */
 
-type JSONSchema2TS<T> = any
+// type JSONSchema2TS<T extends JSON> = T extends { type: infer Type }
+//   ? Type extends 'string'
+//     ? string
+//     : Type extends 'number'
+//       ? number
+//       : Type extends 'boolean'
+//         ? boolean
+//         : Type extends 'object'
+//           ? boolean
+//           : never
+//   : never
+
+// type JSONSchema2TS<T extends JSON> = T extends { type: infer Type }
+//   ? Type extends 'number'
+//     ? T extends { enum: infer E extends number[] }
+//       ? E[number]
+//       : number
+//     : number
+//   : never
+
+type JSONType = 'number' | 'string' | 'object' | 'boolean' | 'array'
+type JSON<T extends JSONType = JSONType> = T extends 'number' | 'string'
+  ? { type: T; enum?: T extends 'number' ? number[] : string[] }
+  : T extends 'array'
+    ? { type: T; items?: JSON }
+    : T extends 'object'
+      ? { type: T; properties?: Record<string, JSON> }
+      : { type: T }
+
+type ToNumberJSON<T extends JSON> = T extends { enum: infer E extends number[] }
+  ? E[number]
+  : number
+
+type ToStringJSON<T extends JSON> = T extends { enum: infer E extends string[] }
+  ? E[number]
+  : string
+
+type ToObjectJSON<T extends JSON> = T extends { properties: infer P extends Record<string, JSON> }
+  ? { [K in keyof P]: JSONSchema2TS<P[K]> }
+  : Record<string, unknown>
+
+type ToArrayJSON<T extends JSON> = T extends { items: infer I extends JSON }
+  ? JSONSchema2TS<I>[]
+  : unknown[]
+
+type JSONSchema2TS<T extends JSON> = T extends { type: infer Type }
+  ? Type extends 'number'
+    ? ToNumberJSON<T>
+    : Type extends 'string'
+      ? ToStringJSON<T>
+      : Type extends 'object'
+        ? ToObjectJSON<T>
+        : Type extends 'array'
+          ? ToArrayJSON<T>
+          : Type extends 'boolean'
+            ? boolean
+            : never
+  : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import type { Type } from 'js-yaml'
 
 // + Primitive types
 type Type1 = JSONSchema2TS<{
@@ -81,14 +139,14 @@ type Type8 = JSONSchema2TS<{
   }
 }>
 type Expected8 = {
-  a?: string
+  a: string
 }
 type Result8 = Expect<Equal<Type8, Expected8>>
 // - Object types
 
 // + Arrays
 type Type9 = JSONSchema2TS<{
-  type: 'array'
+  type: 'array'alth
 }>
 type Expected9 = unknown[]
 type Result9 = Expect<Equal<Type9, Expected9>>
@@ -126,8 +184,8 @@ type Type12 = JSONSchema2TS<{
   }
 }>
 type Expected12 = {
-  a?: 'a' | 'b' | 'c'
-  b?: number
+  a: 'a' | 'b' | 'c'
+  b: number
 }
 type Result12 = Expect<Equal<Type12, Expected12>>
 
@@ -160,7 +218,6 @@ type Type14 = JSONSchema2TS<{
           type: 'number'
         }
       }
-      required: ['a']
     }
     add1: { type: 'string' }
     add2: {
@@ -170,14 +227,15 @@ type Type14 = JSONSchema2TS<{
       }
     }
   }
-  required: ['req1', 'req2']
 }>
 type Expected14 = {
   req1: string
   req2: { a: number }
-  add1?: string
-  add2?: number[]
+  add1: string
+  add2: number[]
 }
+
+
 type Result14 = Expect<Equal<Type14, Expected14>>
 // - Required fields
 

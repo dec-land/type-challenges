@@ -27,7 +27,7 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ClassPublicKeys = any
+type ClassPublicKeys<C> = keyof C
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

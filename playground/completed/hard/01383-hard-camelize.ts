@@ -27,10 +27,41 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Camelize<T> = any
+// type IsAlphabet<T extends string> = Lowercase<T> extends Uppercase<T>
+//   ? false
+//   : true
+
+// type CamelCase<S extends string> = S extends `${infer X}_${infer Y}${infer Z}`
+//   // If Y is a symbol (not alphabetic) then keep keep that in and don't change it
+//   ? IsAlphabet<Y> extends false
+//     ? `${Lowercase<X>}_${CamelCase<`${Y}${Z}`>}`
+//     // Else capitalize and append it
+//     : `${Lowercase<X>}${Uppercase<Y>}${CamelCase<Z>}`
+//   : Lowercase<S>
+
+// type Camelize<T> = T extends unknown[]
+//   ? { [K in keyof T]: T[K] extends object ? Camelize<T[K]> : T[K] }
+//   : { [K in keyof T as CamelCase<K & string>]: T[K] extends object ? Camelize<T[K]> : T[K] }
+
+type SnakeToCamel<S> = S extends `${infer L}_${infer U}${infer R}`
+  ? `${L}${Uppercase<U>}${SnakeToCamel<R>}`
+  : S
+
+type CamelizeArray<T> = T extends [infer F, ...infer R]
+  ? [Camelize<F>, ...CamelizeArray<R>]
+  : []
+
+type Camelize<T> = {
+  [K in keyof T as SnakeToCamel<K>]: T[K] extends unknown[]
+    ? CamelizeArray<T[K]>
+    : T[K] extends object
+      ? Camelize<T[K]>
+      : T[K];
+}
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, ExpandRecursively, Expect } from '@type-challenges/utils'
+import type { CamelCase } from './00114-hard-camelcase'
 
 type cases = [
   Expect<Equal<

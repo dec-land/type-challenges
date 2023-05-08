@@ -41,7 +41,7 @@ type IsAlphabet<T extends string> = Lowercase<T> extends Uppercase<T>
 //   : S
 
 // your answers
-type CamelCase<S extends string> = S extends `${infer X}_${infer Y}${infer Z}`
+export type CamelCase<S extends string> = S extends `${infer X}_${infer Y}${infer Z}`
   // If Y is a symbol (not alphabetic) then keep keep that in and don't change it
   ? IsAlphabet<Y> extends false
     ? `${Lowercase<X>}_${CamelCase<`${Y}${Z}`>}`

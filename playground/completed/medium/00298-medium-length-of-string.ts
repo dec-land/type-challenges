@@ -12,7 +12,8 @@
 
 /* _____________ Your Code Here _____________ */
 
-type LengthOfString<S extends string> = any
+type StringToArray<S extends string> = S extends `${infer T}${infer R}` ? [T, ...StringToArray<R>] : []
+type LengthOfString<S extends string> = StringToArray<S>['length']
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

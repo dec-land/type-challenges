@@ -28,7 +28,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-declare function Currying(fn: any): any
+type Curry<P, R> = P extends [infer H, ...infer T] ? (p: H) => Curry<T, R> : R
+
+// Extract the args from the generic type, if they're empty just return a function with no arguments
+// Else recurisvely go through the arguments and create a function for each
+declare function Currying<T extends Function>(fn: T): T extends (...args: infer Args) => infer Return
+  ? Args extends never[]
+    ? () => Return
+    : Curry<Args, Return>
+  : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

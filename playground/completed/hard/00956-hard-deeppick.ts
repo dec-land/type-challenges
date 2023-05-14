@@ -8,7 +8,6 @@
   Implement a type DeepPick, that extends Utility types `Pick`.
   A type takes two arguments.
 
-
   For example:
 
   ```
@@ -37,7 +36,20 @@
 
 /* _____________ Your Code Here _____________ */
 
-type DeepPick = any
+type TypeGet<T, Paths> = Paths extends `${infer A}.${infer B}`
+  // If it needs to recursively go through because there's a .
+  ? A extends keyof T
+    ? { [K in A]: TypeGet<T[A], B> }
+    : never
+  // If the path is just a single key and is a key of T
+  : Paths extends keyof T
+    ? { [K in Paths]: T[Paths] }
+    : never
+
+// Construct the result from a | b to a & b etc
+type UnionToIntercetion<U> = (U extends any ? (arg: U) => any : never) extends ((arg: infer I) => any) ? I : never
+
+type DeepPick<T, PathUnion extends string> = UnionToIntercetion<TypeGet<T, PathUnion>>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

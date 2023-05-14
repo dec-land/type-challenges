@@ -21,9 +21,18 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ObjectKeyPaths<T extends object> = any
+type GenNode<K extends string | number, IsRoot extends boolean> = IsRoot extends true ? `${K}` : `.${K}` | (K extends number ? `[${K}]` | `.[${K}]` : never)
 
-type Test = ObjectKeyPaths<typeof ref>
+type ObjectKeyPaths<
+  T extends object,
+  IsRoot extends boolean = true,
+  K extends keyof T = keyof T,
+> =
+K extends string | number ?
+  GenNode<K, IsRoot> | (T[K] extends object ? `${GenNode<K, IsRoot>}${ObjectKeyPaths<T[K], false>}` : never)
+  : never
+
+type Test = ObjectKeyPaths<{ count: 5 }>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect, ExpectExtends } from '@type-challenges/utils'

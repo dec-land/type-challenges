@@ -25,7 +25,19 @@
 
 /* _____________ Your Code Here _____________ */
 
-type GreaterThan<T extends number, U extends number> = any
+type Tuple<T extends number, R extends Array<1> = []> = R['length'] extends T
+  ? R
+  : Tuple<T, [...R, 1]>
+
+type Longer<T extends Array<unknown>, K extends Array<unknown>> = K extends [infer _, ...infer Tail1]
+  ? T extends [infer _, ...infer Tail2]
+    ? Longer<Tail2, Tail1>
+    : false
+  : T extends []
+    ? false
+    : true
+
+type GreaterThan<T extends number, U extends number> = Longer<Tuple<T>, Tuple<U>>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

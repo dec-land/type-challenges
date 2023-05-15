@@ -26,10 +26,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type PartialByKeys<T, K> = any
+type PartialByKeys<T, U extends keyof T = keyof T> =
+  Omit<Partial<Pick<T, U>> & Omit<T, U>, never>
+
+type Test = PartialByKeys<User, 'name'>
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, ExpandRecursively, Expect } from '@type-challenges/utils'
 
 interface User {
   name: string

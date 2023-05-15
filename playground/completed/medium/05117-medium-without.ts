@@ -18,7 +18,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Without<T, U> = any
+type ToUnion<T> = T extends any[] ? T[number] : T
+type Without<T extends readonly number[], U extends number | readonly number[]> = T extends [infer A, ...infer Rest extends number[]]
+  ? A extends ToUnion<U>
+    ? Without<Rest, U>
+    : [A, ...Without<Rest, U>]
+  : T
+
+type Test = Without<[1, 2, 4, 1, 5], [1, 2]>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
